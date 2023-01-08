@@ -1,19 +1,49 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Todos :todoEntries="todoEntries" />
+    <AddTodo @newEmitpassed="addtodoItemToParent" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Todos from "./components/Todos.vue";
+import AddTodo from "./components/AddTodo.vue";
+
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    Todos,
+    AddTodo,
+  },
+  data() {
+    return {
+      todoEntries: [
+        {
+          id: 1,
+          title: "Lorem One",
+          completed: true,
+        },
+        {
+          id: 2,
+          title: "Lorem Two",
+          completed: true,
+        },
+        {
+          id: 3,
+          title: "Lorem Three",
+          completed: true,
+        },
+      ],
+    };
+  },
+  methods: {
+     addtodoItemToParent(newTodo){
+         this.todoEntries = [...this.todoEntries, newTodo]
+         
+     }
+  },
+};
 </script>
 
 <style>
