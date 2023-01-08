@@ -1,55 +1,67 @@
 <template>
-  <div>
-      <div>
-         <h2>Todo List</h2>
-         <!-- <div  v-for="todoEntry in todoEntries" :key="todoEntry.id">   -->
-            <!-- <h4 >{{todoEntry}}</h4> -->
-            <!-- <p>{{todoEntry.completed}}</p> -->
-             <!-- <div v-bind:class="{'completed': todoEntry.completed}">
-                <p @click="completedTask">{{todoEntry.title}}</p>
-             -->
-                   <!-- </div> -->
-                   <ul v-for="todoEntry in todoEntries" :key="todoEntry.id">
-                       <li>
-                          <!-- <TodoList :todoEntry="todoEntry" /> -->
-                          <TodoList>{{todoEntry.title}} </TodoList>
-                       </li>
-                   </ul>
-             
-       
-         <!-- </div> -->
-      </div>
+  <div class="wrapper" v-cloak>
+    <h2>ToDos</h2>
+    <table>
+      <tr v-for="(todo, i) in sortedToDos" :key="i">
+        <td>
+          <span :class="{ todoDone: todo.done }">{{ todo.text }}</span>
+        </td>
+        <td>
+          <button @click="toggleDone(todo)">
+            <span v-if="todo.done"> Incomplete </span><span v-else> Done </span>
+          </button>
+        </td>
+      </tr>
+    </table>
+    <p>
+      <input type="text" v-model="todoText" />
+      <button @click="saveToDo">Save ToDo</button>
+    </p>
   </div>
 </template>
 
 <script>
-import TodoList from './TodoList.vue'
-
 export default {
-    name: 'Todos',
-    props : ['todoEntries'],
-    component: {TodoList},
-    
-    data(){
-        return{
-            
-        }
-    },
-    // methods: {
-    //     completedTask(){
-    //         this.todoEntries.completed = !this.todoEntries.completed
-    //         console.log('clicked')
-    //     }
-    // }
+  data() {
+    return {
+      todos: [],
+      todoText: "",
+    };
+  },
 
-}
+  methods: {
+    saveToDo() {
+      if (this.todoText === "") return;
+      this.todos.unshift({
+        text: this.todoText,
+        done: false,
+      });
+      this.todoText = "";
+    },
+    toggleDone(todo) {
+      todo.done = !todo.done;
+    },
+  },
+  computed: {
+    sortedToDos() {
+      return this.todos.slice().sort((a, b) => {
+        if (!a.done && b.done) return -1;
+        if (a.done && b.done) return 0;
+        if (a.done && !b.done) return 1;
+      });
+    },
+  },
+};
 </script>
 
-<style>
-p{
-    cursor: pointer;
+<style scoped>
+[v-cloak] {display: none}
+
+.todoDone {
+  color:#c0c0c0;
+  text-decoration: line-through;
 }
-.completed {
-        text-decoration: line-through;
-      }
+.wrapper{
+    border: 1px solid black
+}
 </style>
